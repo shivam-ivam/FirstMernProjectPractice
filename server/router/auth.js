@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 require("../Database/dbConnection");
@@ -56,6 +57,8 @@ router.post("/login", async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ error: "wrong password" });
     }
+    const token = await userExist.generateAuthToken();          ////////////            token generation 
+    console.log(token);
     return res.status(200).json(userExist);
   } catch (error) {
     console.log(error);
