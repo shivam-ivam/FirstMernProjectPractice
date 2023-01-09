@@ -5,16 +5,15 @@ const bcrypt = require("bcryptjs");
 require("../Database/dbConnection");
 const User = require("../Database/dbSchema");
 
-router.get("/", (req, res) => {
-  res.send("router home call");
-});
+
 
 //                                                        register route
 
-router.post("/register", async (req, res) => {
+router.post("/signup-user", async (req, res) => {
+  console.log(req.body)
   const { name, studentId, password } = req.body;
   if (!name || !studentId || !password) {
-    return res.status(422).json({ error: "Plz fill all the details" });
+    return res.status(401).json({ error: "Plz fill all the details" });
   }
 
   try {
@@ -39,7 +38,7 @@ router.post("/register", async (req, res) => {
 
 //              login route
 
-router.post("/login", async (req, res) => {
+router.post("/login-user", async (req, res) => {
   const { studentId, password } = req.body;
 
   if (!password || !studentId) {
