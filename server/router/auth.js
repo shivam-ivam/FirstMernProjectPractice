@@ -2,7 +2,8 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
+const authentication = require("../middleware/authentication")
 require("../Database/dbConnection");
 const User = require("../Database/dbSchema");
 
@@ -57,7 +58,7 @@ router.post("/login-user", async (req, res) => {
       return res.status(400).json({ error: "wrong password" });
     }
     const token = await userExist.generateAuthToken(); ////////////            token generation
-    console.log(token);
+
 
     //             cookie creation
     
@@ -71,6 +72,11 @@ router.post("/login-user", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+// secret page authentication from server 
+router.post("/secret", authentication, (req,res)=> {
+  res.json(req.rootUser);
 });
 
 module.exports = router;

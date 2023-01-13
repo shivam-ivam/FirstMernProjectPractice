@@ -8,7 +8,6 @@ export default function Login() {
 
   const handleLoginButton = async (e) => {
     e.preventDefault();
-    console.log(studentId, password);
     const res = await fetch("http://localhost:5000/login-user", {
       method: "POST",
       headers: {
