@@ -2,15 +2,15 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const cookieParser = require('cookie-parser');
 require("../Database/dbConnection");
 const User = require("../Database/dbSchema");
-
 
 
 //                                                        register route
 
 router.post("/signup-user", async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const { name, studentId, password } = req.body;
   if (!name || !studentId || !password) {
     return res.status(401).json({ error: "Plz fill all the details" });
@@ -40,9 +40,9 @@ router.post("/signup-user", async (req, res) => {
 
 router.post("/login-user", async (req, res) => {
   const { studentId, password } = req.body;
-
+  console.log(req.body);
   if (!password || !studentId) {
-    return res.status(422).json({ error: "plz fill all the fields" });
+    return res.status(400).json({ error: "plz fill all the fields" });
   }
 
   try {
@@ -50,22 +50,24 @@ router.post("/login-user", async (req, res) => {
       studentId: studentId,
     });
     if (!userExist) {
-      return res.status(422).json({ message: "creditional are invalid" });
+      return res.status(400).json({ message: "creditional are invalid" });
     }
     const isMatch = await bcrypt.compare(password, userExist.password);
     if (!isMatch) {
-      return res.status(401).json({ error: "wrong password" });
+      return res.status(400).json({ error: "wrong password" });
     }
     const token = await userExist.generateAuthToken(); ////////////            token generation
     console.log(token);
 
     //             cookie creation
-    res.cookie("jwtoken", token, {
-      expires: new Date(Date.now() + 25892000000),
-      httpOnly: true,
-    });
+    
+    // res.cookie("jwtoken", token, {
+    //   path:"http://localhost:5000/signup-user",
+    //   maxAge: 900000,
+    //   httpOnly: true,
+    // });
 
-    return res.status(200).json(userExist);
+    return res.status(200).json({"token":token});
   } catch (error) {
     console.log(error);
   }
