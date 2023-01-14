@@ -1,7 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const handleLogout = ()=>{
+        document.cookie = "user=;";
+        navigate("/")
+  }
   return (
     <>
       <nav>
@@ -13,6 +18,7 @@ export default function Navbar() {
         <br />
         <Link to="/secret">secret</Link>
         <br />
+        <Link onClick={handleLogout} to="/">logout</Link>
       </nav>
     </>
   );
